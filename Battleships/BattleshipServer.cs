@@ -16,41 +16,37 @@ namespace Battleships
 {
     public class Form1 : Form
     {
-        private const int MAX_MARKS = 60;
+        private const int MaxMarks = 60;
 
-        private const int MAX_ALLOWED_COMMANDS = 20;
+        private const int MaxAllowedCommands = 20;
 
-        private const int SHIPTYPE_BATTLESHIP = 0;
+        private const int ShiptypeBattleship = 0;
 
-        private const int SHIPTYPE_FRIGATE = 1;
+        private const int ShiptypeFrigate = 1;
 
-        private const int SHIPTYPE_SUBMARINE = 2;
+        private const int ShiptypeSubmarine = 2;
 
-        private const int MAX_SHIPS = 200;
+        private const int MaxShips = 200;
 
-        private const int FIRING_RANGE = 100;
+        private const int FireLimit = 10;
 
-        private const int VISIBLE_RANGE = 200;
+        private const bool TutorVersion = false;
 
-        private const int FIRE_LIMIT = 10;
+        private const int PortToClient = 1925;
 
-        private const bool TUTOR_VERSION = false;
+        private const int PortFromClient = 1924;
 
-        private const int PORT_TO_CLIENT = 1925;
+        private const int DefaultServer = 0;
 
-        private const int PORT_FROM_CLIENT = 1924;
+        private const int NastyServer = 1;
 
-        private const int DEFAULT_SERVER = 0;
+        private const int ZeroServer = 2;
 
-        private const int NASTY_SERVER = 1;
+        private const int MaxNasties = 20;
 
-        private const int ZERO_SERVER = 2;
-
-        private const int MAX_NASTIES = 20;
+        private const int ServerType = DefaultServer;
 
         private readonly Random _random = new Random();
-
-        private int _serverType;
 
         public UdpClient ReceivingUdpClient;
 
@@ -262,16 +258,16 @@ namespace Battleships
             int result;
             switch (num)
             {
-                case 0:
+                case ShiptypeBattleship:
                     switch (num2)
                     {
-                        case 0:
+                        case ShiptypeBattleship:
                             result = 200;
                             break;
-                        case 1:
+                        case ShiptypeFrigate:
                             result = 200;
                             break;
-                        case 2:
+                        case ShiptypeSubmarine:
                             result = 5;
                             break;
                         default:
@@ -279,16 +275,16 @@ namespace Battleships
                             break;
                     }
                     break;
-                case 1:
+                case ShiptypeFrigate:
                     switch (num2)
                     {
-                        case 0:
+                        case ShiptypeBattleship:
                             result = 150;
                             break;
-                        case 1:
+                        case ShiptypeFrigate:
                             result = 150;
                             break;
-                        case 2:
+                        case ShiptypeSubmarine:
                             result = 100;
                             break;
                         default:
@@ -296,16 +292,16 @@ namespace Battleships
                             break;
                     }
                     break;
-                case 2:
+                case ShiptypeSubmarine:
                     switch (num2)
                     {
-                        case 0:
+                        case ShiptypeBattleship:
                             result = 100;
                             break;
-                        case 1:
+                        case ShiptypeFrigate:
                             result = 100;
                             break;
-                        case 2:
+                        case ShiptypeSubmarine:
                             result = 100;
                             break;
                         default:
@@ -325,13 +321,13 @@ namespace Battleships
             int result;
             switch (_shipType[fromShip])
             {
-                case 0:
+                case ShiptypeBattleship:
                     result = 100;
                     break;
-                case 1:
+                case ShiptypeFrigate:
                     result = 75;
                     break;
-                case 2:
+                case ShiptypeSubmarine:
                     result = 50;
                     break;
                 default:
@@ -348,16 +344,16 @@ namespace Battleships
             int result;
             switch (num)
             {
-                case 0:
+                case ShiptypeBattleship:
                     switch (num2)
                     {
-                        case 0:
+                        case ShiptypeBattleship:
                             result = 1;
                             break;
-                        case 1:
+                        case ShiptypeFrigate:
                             result = 2;
                             break;
-                        case 2:
+                        case ShiptypeSubmarine:
                             result = 3;
                             break;
                         default:
@@ -365,16 +361,16 @@ namespace Battleships
                             break;
                     }
                     break;
-                case 1:
+                case ShiptypeFrigate:
                     switch (num2)
                     {
-                        case 0:
+                        case ShiptypeBattleship:
                             result = 1;
                             break;
-                        case 1:
+                        case ShiptypeFrigate:
                             result = 1;
                             break;
-                        case 2:
+                        case ShiptypeSubmarine:
                             result = 2;
                             break;
                         default:
@@ -382,16 +378,16 @@ namespace Battleships
                             break;
                     }
                     break;
-                case 2:
+                case ShiptypeSubmarine:
                     switch (num2)
                     {
-                        case 0:
+                        case ShiptypeBattleship:
                             result = 2;
                             break;
-                        case 1:
+                        case ShiptypeFrigate:
                             result = 2;
                             break;
-                        case 2:
+                        case ShiptypeSubmarine:
                             result = 2;
                             break;
                         default:
@@ -408,7 +404,6 @@ namespace Battleships
 
         private void initialise_ships()
         {
-            _serverType = 0;
             _tenMinuteCounter = 0L;
             _showMarks = false;
             var num = 0;
@@ -425,7 +420,7 @@ namespace Battleships
                     _destinationAddress[num] = "";
                     _sourceAddress[num] = "";
                     _message[num] = "";
-                    _shipType[num] = 0;
+                    _shipType[num] = ShiptypeBattleship;
                     _shipX[num] = 0;
                     _shipY[num] = 0;
                     _moves[num] = false;
@@ -442,7 +437,7 @@ namespace Battleships
                     _marks[num] = 0;
                     _commandCount[num] = 0;
                     num++;
-                } while (num <= 200);
+                } while (num <= MaxShips);
                 _packX = 500;
                 _packY = 500;
                 _packTimer = 50;
@@ -464,10 +459,10 @@ namespace Battleships
                         flag = true;
                     }
                     num2++;
-                } while (num2 <= 200);
+                } while (num2 <= MaxShips);
                 if (num < 0)
                 {
-                    num2 = 200;
+                    num2 = MaxShips;
                     do
                     {
                         if (!_inuse[num2])
@@ -477,7 +472,7 @@ namespace Battleships
                         num2 += -1;
                     } while (num2 >= 0);
                 }
-                if (num >= 0 & num <= 200)
+                if (num >= 0 & num <= MaxShips)
                 {
                     _inuse[num] = true;
                     _active[num] = true;
@@ -513,7 +508,7 @@ namespace Battleships
                         num3++;
                     }
                     num2++;
-                } while (num2 <= 200);
+                } while (num2 <= MaxShips);
                 _score[num] = _score[num] - num3;
             }
         }
@@ -531,9 +526,9 @@ namespace Battleships
                         num = num2;
                     }
                     num2++;
-                } while (num2 <= 200);
+                } while (num2 <= MaxShips);
                 string result;
-                if (num >= 0 & num <= 200)
+                if (num >= 0 & num <= MaxShips)
                 {
                     result = _ipAddress[num];
                 }
@@ -558,9 +553,9 @@ namespace Battleships
                         num = num2;
                     }
                     num2++;
-                } while (num2 <= 200);
+                } while (num2 <= MaxShips);
 
-                if (!(num >= 0 & num <= 200))
+                if (!(num >= 0 & num <= MaxShips))
                     return;
 
                 _inuse[num] = true;
@@ -588,9 +583,9 @@ namespace Battleships
                         num = num2;
                     }
                     num2++;
-                } while (num2 <= 200);
+                } while (num2 <= MaxShips);
 
-                if (!(num >= 0 & num <= 200))
+                if (!(num >= 0 & num <= MaxShips))
                     return;
 
                 _inuse[num] = true;
@@ -618,9 +613,9 @@ namespace Battleships
                         num = num2;
                     }
                     num2++;
-                } while (num2 <= 200);
+                } while (num2 <= MaxShips);
 
-                if (!(num >= 0 & num <= 200))
+                if (!(num >= 0 & num <= MaxShips))
                     return;
 
                 _inuse[num] = true;
@@ -649,9 +644,9 @@ namespace Battleships
                         num = num2;
                     }
                     num2++;
-                } while (num2 <= 200);
+                } while (num2 <= MaxShips);
 
-                if (!(num >= 0 & num <= 200))
+                if (!(num >= 0 & num <= MaxShips))
                     return;
 
                 _inuse[num] = true;
@@ -666,7 +661,7 @@ namespace Battleships
 
         private void AddServerShip(int index, string name, int x, int y, int shipType)
         {
-            if (!(index >= 0 & index <= 200))
+            if (!(index >= 0 & index <= MaxShips))
                 return;
 
             _inuse[index] = true;
@@ -693,7 +688,7 @@ namespace Battleships
         {
             checked
             {
-                if (!(index >= 0 & index < 20))
+                if (!(index >= 0 & index < MaxNasties))
                     return;
 
                 if (_speedX[index] == 0 & _speedX[index] == 0)
@@ -733,14 +728,14 @@ namespace Battleships
                         num = num3;
                     }
                     num3++;
-                } while (num3 <= 200);
+                } while (num3 <= MaxShips);
 
                 _moves[index] = true;
 
-                if (!(num >= 0 & num <= 200))
+                if (!(num >= 0 & num <= MaxShips))
                     return;
 
-                if (_fireCount[index] < 10)
+                if (_fireCount[index] < FireLimit)
                 {
                     _fire[index] = true;
                     _fireX[index] = _shipX[num];
@@ -775,7 +770,7 @@ namespace Battleships
         {
             checked
             {
-                if (!(index >= 0 & index <= 200))
+                if (!(index >= 0 & index <= MaxShips))
                     return;
 
                 if (_speedX[index] == 0 & _speedX[index] == 0)
@@ -823,10 +818,11 @@ namespace Battleships
                                 num++;
                             }
                             num4++;
-                        } while (num4 <= 200);
-                        if (num2 >= 0 & num2 <= 200)
+                        } while (num4 <= MaxShips);
+
+                        if (num2 >= 0 & num2 <= MaxShips)
                         {
-                            if (_fireCount[0] < 10)
+                            if (_fireCount[0] < FireLimit)
                             {
                                 _fire[0] = true;
                                 _fireX[0] = _shipX[num2];
@@ -857,7 +853,7 @@ namespace Battleships
                         }
                         _moves[0] = true;
 
-                        if (_serverType == 0 & num > 15)
+                        if (ServerType == DefaultServer & num > 15)
                         {
                             var num5 = 0;
                             var num6 = 0;
@@ -866,32 +862,32 @@ namespace Battleships
 
                             do
                             {
-                                if (_shipType[num4] == 0)
+                                if (_shipType[num4] == ShiptypeBattleship)
                                 {
                                     num5++;
                                 }
-                                if (_shipType[num4] == 1)
+                                if (_shipType[num4] == ShiptypeFrigate)
                                 {
                                     num6++;
                                 }
-                                if (_shipType[num4] == 2)
+                                if (_shipType[num4] == ShiptypeSubmarine)
                                 {
                                     num7++;
                                 }
                                 num4++;
-                            } while (num4 <= 200);
+                            } while (num4 <= MaxShips);
 
                             if (num5 > num6 + num7)
                             {
-                                _shipType[0] = 2;
+                                _shipType[0] = ShiptypeSubmarine;
                             }
                             if (num6 > num5 + num7)
                             {
-                                _shipType[0] = 0;
+                                _shipType[0] = ShiptypeBattleship;
                             }
                             if (num7 > num6 + num5)
                             {
-                                _shipType[0] = 1;
+                                _shipType[0] = ShiptypeFrigate;
                             }
                         }
                         break;
@@ -912,9 +908,9 @@ namespace Battleships
                                 num2 = num4;
                             }
                             num4++;
-                        } while (num4 <= 200);
+                        } while (num4 <= MaxShips);
 
-                        if (num2 >= 0 & num2 <= 200)
+                        if (num2 >= 0 & num2 <= MaxShips)
                         {
                             _fire[index] = true;
                             _fireX[index] = _shipX[num2];
@@ -959,9 +955,9 @@ namespace Battleships
                                 num2 = num4;
                             }
                             num4++;
-                        } while (num4 <= 200);
+                        } while (num4 <= MaxShips);
 
-                        if (num2 >= 0 & num2 <= 200)
+                        if (num2 >= 0 & num2 <= MaxShips)
                         {
                             _fire[index] = true;
                             _fireX[index] = _shipX[num2];
@@ -1000,9 +996,9 @@ namespace Battleships
                                 num2 = num4;
                             }
                             num4++;
-                        } while (num4 <= 200);
+                        } while (num4 <= MaxShips);
 
-                        if (num2 >= 0 & num2 <= 200)
+                        if (num2 >= 0 & num2 <= MaxShips)
                         {
                             _fire[index] = true;
                             _fireX[index] = _shipX[num2];
@@ -1050,7 +1046,7 @@ namespace Battleships
                         }
                         else
                         {
-                            if (num2 >= 0 & num2 <= 200)
+                            if (num2 >= 0 & num2 <= MaxShips)
                             {
                                 if (_shipX[index] < _shipX[num2])
                                 {
@@ -1172,6 +1168,7 @@ namespace Battleships
                     num++;
                 } while (num <= 1000);
                 num = 0;
+
                 do
                 {
                     var num2 = 0;
@@ -1179,35 +1176,35 @@ namespace Battleships
                     {
                         _distance[num, num2] = 10000;
                         num2++;
-                    } while (num2 <= 200);
+                    } while (num2 <= MaxShips);
                     num++;
-                } while (num <= 200);
+                } while (num <= MaxShips);
+
                 resize_form();
                 initialise_ships();
-                if (_serverType == 0)
+
+                if (ServerType == DefaultServer)
                 {
-                    AddServerShip(0, "Marks_24", Next_Position(), Next_Position(), 0);
-                    AddServerShip(1, "Hit_Run_", Next_Position(), Next_Position(), 2);
-                    AddServerShip(2, "Rand_Hit", Next_Position(), Next_Position(), 1);
-                    AddServerShip(3, "Marks_00", Next_Position(), Next_Position(), 0);
-                    AddServerShip(4, "Pack_01", Next_Position(), Next_Position(), 0);
-                    AddServerShip(5, "Pack_02", Next_Position(), Next_Position(), 0);
-                    AddServerShip(6, "Pack_03", Next_Position(), Next_Position(), 1);
+                    AddServerShip(0, "Marks_24", Next_Position(), Next_Position(), ShiptypeBattleship);
+                    AddServerShip(1, "Hit_Run_", Next_Position(), Next_Position(), ShiptypeSubmarine);
+                    AddServerShip(2, "Rand_Hit", Next_Position(), Next_Position(), ShiptypeFrigate);
+                    AddServerShip(3, "Marks_00", Next_Position(), Next_Position(), ShiptypeBattleship);
+                    AddServerShip(4, "Pack_01", Next_Position(), Next_Position(), ShiptypeBattleship);
+                    AddServerShip(5, "Pack_02", Next_Position(), Next_Position(), ShiptypeBattleship);
+                    AddServerShip(6, "Pack_03", Next_Position(), Next_Position(), ShiptypeFrigate);
                 }
-                else if (_serverType == 1)
+                else if (ServerType == NastyServer)
                 {
                     num = 0;
                     do
                     {
-                        AddServerShip(num, "Nasty_" + num.ToString().Trim(),
-                            Next_Position(),
-                            Next_Position(),
-                            num % 3);
+                        AddServerShip(num, "Nasty_" + num.ToString().Trim(), Next_Position(), Next_Position(), num % 3);
                         num++;
-                    } while (num <= 19);
+                    } while (num < MaxNasties);
                 }
+
                 Scoreboard.Text = "";
-                ReceivingUdpClient = new UdpClient(1924);
+                ReceivingUdpClient = new UdpClient(PortFromClient);
                 ThreadReceive = new Thread(ReceiveMessages);
                 ThreadReceive.Start();
                 OneSecondTimer.Enabled = true;
@@ -1483,13 +1480,16 @@ namespace Battleships
                 _packTimer = 180;
                 IL_104:
                 var i = 0;
+
                 do
                 {
                     _newHealth[i] = _health[i];
                     Application.DoEvents();
                     i++;
-                } while (i <= 200);
+                } while (i <= MaxShips);
+
                 i = 0;
+
                 do
                 {
                     if (_inuse[i] & _active[i] & _fire[i])
@@ -1523,13 +1523,16 @@ namespace Battleships
                                 }
                             }
                             j++;
-                        } while (j <= 200);
+                        } while (j <= MaxShips);
                     }
+
                     _fire[i] = false;
                     Application.DoEvents();
                     i++;
-                } while (i <= 200);
+                } while (i <= MaxShips);
+
                 i = 0;
+
                 do
                 {
                     _health[i] = _newHealth[i];
@@ -1546,8 +1549,10 @@ namespace Battleships
                     }
                     Application.DoEvents();
                     i++;
-                } while (i <= 200);
+                } while (i <= MaxShips);
+
                 i = 0;
+
                 do
                 {
                     if (_inuse[i] & _active[i] & _moves[i])
@@ -1568,8 +1573,8 @@ namespace Battleships
                         {
                             _speedY[i] = -2;
                         }
-                        float num3 = (float) (_health[i] * _speedX[i] / 10.0);
-                        float num4 = (float) (_health[i] * _speedY[i] / 10.0);
+                        var num3 = (float) (_health[i] * _speedX[i] / 10.0);
+                        var num4 = (float) (_health[i] * _speedY[i] / 10.0);
                         _shipX[i] = (int) Math.Round(_shipX[i] + num3);
                         _shipY[i] = (int) Math.Round(_shipY[i] + num4);
                         if (_shipX[i] < 2)
@@ -1592,27 +1597,27 @@ namespace Battleships
                     _moves[i] = false;
                     Application.DoEvents();
                     i++;
-                } while (i <= 200);
+                } while (i <= MaxShips);
+
                 var font = new Font("Verdana", 8f);
                 graphics.SmoothingMode = SmoothingMode.HighQuality;
                 graphics.FillRegion(Brushes.LightCyan, new Region(BattleArea.ClientRectangle));
                 i = 0;
+
                 do
                 {
                     float num5;
                     float num6;
                     unchecked
                     {
-                        num5 = (float) (checked((BattleArea.Width - 5) * _shipX[i]) / 1000.0 -
-                                        2.0);
-                        num6 = (float) (BattleArea.Height -
-                                        checked(BattleArea.Height * _shipY[i]) / 1000.0 - 2.0);
+                        num5 = (float) (checked((BattleArea.Width - 5) * _shipX[i]) / 1000.0 - 2.0);
+                        num6 = (float) (BattleArea.Height - checked(BattleArea.Height * _shipY[i]) / 1000.0 - 2.0);
                     }
                     if (_inuse[i] & _active[i])
                     {
                         switch (_shipType[i])
                         {
-                            case 0:
+                            case ShiptypeBattleship:
                                 switch (_health[i])
                                 {
                                     case 1:
@@ -1640,7 +1645,7 @@ namespace Battleships
                                         break;
                                 }
                                 break;
-                            case 1:
+                            case ShiptypeFrigate:
                                 switch (_health[i])
                                 {
                                     case 1:
@@ -1668,7 +1673,7 @@ namespace Battleships
                                         break;
                                 }
                                 break;
-                            case 2:
+                            case ShiptypeSubmarine:
                                 switch (_health[i])
                                 {
                                     case 1:
@@ -1709,13 +1714,15 @@ namespace Battleships
                     }
                     Application.DoEvents();
                     i++;
-                } while (i <= 200);
+                } while (i <= MaxShips);
+
                 BattleArea.Image = image;
                 graphics.Dispose();
                 var text = "";
                 var num7 = 0;
                 Set_Marks();
                 i = 0;
+
                 do
                 {
                     if (_inuse[i] & _active[i])
@@ -1732,7 +1739,8 @@ namespace Battleships
                         num7++;
                     }
                     i++;
-                } while (i <= 200);
+                } while (i <= MaxShips);
+
                 var num8 = num7 - 1;
 
                 for (i = 0; i <= num8; i++)
@@ -1780,13 +1788,13 @@ namespace Battleships
                         }
                         _distance[i, j] = (int) Math.Round(Math.Sqrt(d));
                         j++;
-                    } while (j <= 200);
+                    } while (j <= MaxShips);
 
                     Application.DoEvents();
                     i++;
-                } while (i <= 200);
+                } while (i <= MaxShips);
 
-                if (_serverType == 0)
+                if (ServerType == DefaultServer)
                 {
                     UpdateServerShips(0);
                     UpdateServerShips(1);
@@ -1796,32 +1804,32 @@ namespace Battleships
                     UpdateServerShips(5);
                     UpdateServerShips(6);
                 }
-                else if (_serverType == 1)
+                else if (ServerType == NastyServer)
                 {
                     i = 0;
                     do
                     {
                         UpdateNastyShips(i);
                         i++;
-                    } while (i <= 19);
+                    } while (i < MaxNasties);
                 }
 
                 var num14 = 0;
 
-                switch (_serverType)
+                switch (ServerType)
                 {
-                    case 0:
+                    case DefaultServer:
                         num14 = 7;
                         break;
-                    case 1:
-                        num14 = 20;
+                    case NastyServer:
+                        num14 = MaxNasties;
                         break;
-                    case 2:
+                    case ZeroServer:
                         num14 = 0;
                         break;
                 }
 
-                for (i = num14; i <= 200; i++)
+                for (i = num14; i <= MaxShips; i++)
                 {
                     if (!(_inuse[i] & _active[i]))
                         continue;
@@ -1840,7 +1848,7 @@ namespace Battleships
                             _numberOfShips++;
                         }
                         j++;
-                    } while (j <= 200);
+                    } while (j <= MaxShips);
 
                     if (_numberOfShips > 1)
                     {
@@ -1861,7 +1869,7 @@ namespace Battleships
 
                     if (_numberOfShips > 0)
                     {
-                        int num19 = _numberOfShips - 1;
+                        var num19 = _numberOfShips - 1;
                         for (j = 0; j <= num19; j++)
                         {
                             text3 = string.Concat(text3, "|",
@@ -1875,7 +1883,7 @@ namespace Battleships
 
                     text3 += "\0";
                     var addr = IPAddress.Parse(_ipAddress[i]);
-                    var port = 1925;
+                    var port = PortToClient;
 
                     udpClient.Connect(addr, port);
 
@@ -1895,7 +1903,7 @@ namespace Battleships
                         var s = string.Concat("Message ", _destinationAddress[i], ", ", _sourceAddress[i],
                             ", ", _message[i], "\0");
                         addr = IPAddress.Parse(GetIp(_destinationAddress[i]));
-                        port = 1925;
+                        port = PortToClient;
                         udpClient.Connect(addr, port);
                         array = Encoding.ASCII.GetBytes(s);
                         var arg13960 = udpClient;
@@ -1916,7 +1924,7 @@ namespace Battleships
                     goto IL_144A;
                 }
 
-                if (!(false & _serverType == 0)) // Currently always true, no marks to be printed.
+                if (!(TutorVersion & ServerType == DefaultServer)) // Currently always true, no marks to be printed.
                 {
                     goto IL_143C;
                 }
@@ -1929,13 +1937,13 @@ namespace Battleships
 
                 do
                 {
-                    if (_commandCount[i] > 20)
+                    if (_commandCount[i] > MaxAllowedCommands)
                     {
                         IllegalMessage(_ipAddress[i]);
                     }
                     _commandCount[i] = 0;
                     i++;
-                } while (i <= 200);
+                } while (i <= MaxShips);
 
                 OneSecondTimer.Interval = 95;
                 OneSecondTimer.Enabled = true;
@@ -1955,7 +1963,7 @@ namespace Battleships
                         num = _score[num2];
                     }
                     num2++;
-                } while (num2 <= 200);
+                } while (num2 <= MaxShips);
 
                 var num3 = _score[0];
                 var num4 = _score[3];
@@ -1994,9 +2002,9 @@ namespace Battleships
                             {
                                 _marks[num2] = 0;
                             }
-                            if (_marks[num2] > 60)
+                            if (_marks[num2] > MaxMarks)
                             {
-                                _marks[num2] = 60;
+                                _marks[num2] = MaxMarks;
                             }
                             if (_marks[num2] < 25)
                             {
@@ -2005,7 +2013,7 @@ namespace Battleships
                         }
                     }
                     num2++;
-                } while (num2 <= 200);
+                } while (num2 <= MaxShips);
             }
         }
 
@@ -2030,14 +2038,15 @@ namespace Battleships
                         streamWriter.WriteLine(value);
                     }
                     num++;
-                } while (num <= 200);
+                } while (num <= MaxShips);
+
                 streamWriter.Close();
             }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (false & _serverType == 0) // Currently always true, no marks to be printed.
+            if (TutorVersion & ServerType == DefaultServer) // Currently always true, no marks to be printed.
             {
                 Print_Marks();
             }
@@ -2116,7 +2125,7 @@ namespace Battleships
                             }
                         }
 
-                        if (num3 >= 0 & num3 <= 200)
+                        if (num3 >= 0 & num3 <= MaxShips)
                         {
                             _inuse[num3] = true;
                             _active[num3] = true;
@@ -2127,10 +2136,8 @@ namespace Battleships
                             _destinationAddress[num3] = "";
                             _sourceAddress[num3] = "";
                             _message[num3] = "";
-                            _shipX[num3] =
-                                Next_Position();
-                            _shipY[num3] =
-                                Next_Position();
+                            _shipX[num3] = Next_Position();
+                            _shipY[num3] = Next_Position();
                             _moves[num3] = false;
                             _speedX[num3] = 0;
                             _speedY[num3] = 0;
