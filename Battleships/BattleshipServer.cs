@@ -44,7 +44,7 @@ namespace Battleships
 
         private const int MaxNasties = 20;
 
-        private const int ServerType = DefaultServer;
+        private const int ServerType = NastyServer;
 
         private readonly Random _random = new Random();
 
@@ -1198,7 +1198,8 @@ namespace Battleships
                     num = 0;
                     do
                     {
-                        AddServerShip(num, "Nasty_" + num.ToString().Trim(), Next_Position(), Next_Position(), num % 3);
+                        AddServerShip(num, "Nasty_" + num % 3 + "_" + num.ToString().Trim(), Next_Position(),
+                            Next_Position(), num % 3);
                         num++;
                     } while (num < MaxNasties);
                 }
@@ -1267,9 +1268,7 @@ namespace Battleships
                             }
                         }
 
-                        AddShip(text, text2, text3, ip,
-                            Next_Position(),
-                            Next_Position(),
+                        AddShip(text, text2, text3, ip, Next_Position(), Next_Position(),
                             Convert.ToInt32(text4.Trim()));
                     }
                     else
@@ -1497,30 +1496,25 @@ namespace Battleships
                         var j = 0;
                         do
                         {
-                            if (_inuse[j] & _active[j])
+                            if (_inuse[j] && // Ship is in use.
+                                _active[j] && // Ship is active.
+                                i != j && // Ship is not the one that's firing.
+                                _distance[i, j] <= FiringRange(i) && // Ship is within firing range.
+                                _fireX[i] == _shipX[j] && // Target X = Ship X
+                                _fireY[i] == _shipY[j] && // Target Y = Ship Y
+
+                                // Generate shot chance, factoring in distance, health and chance.
+                                _distance[i, j] < ((((FiringRange(i) * _health[i]) * _random.NextDouble()) / 8) + 1))
                             {
-                                if (i != j)
+                                if (_score[i] < 32000)
                                 {
-                                    if (_distance[i, j] <= FiringRange(i))
-                                    {
-                                        if (_fireX[i] == _shipX[j] & _fireY[i] == _shipY[j])
-                                        {
-                                            if (_distance[i, j] <
-                                                ((((FiringRange(i) * _health[i]) * _random.NextDouble()) / 8) + 1))
-                                            {
-                                                if (_score[i] < 32000)
-                                                {
-                                                    _score[i] += Damage(i, j);
-                                                }
-                                                if (_score[j] > -32000)
-                                                {
-                                                    _score[j] -= Damage(i, j);
-                                                }
-                                                _newHealth[j] -= Damage(i, j);
-                                            }
-                                        }
-                                    }
+                                    _score[i] += Damage(i, j);
                                 }
+                                if (_score[j] > -32000)
+                                {
+                                    _score[j] -= Damage(i, j);
+                                }
+                                _newHealth[j] -= Damage(i, j);
                             }
                             j++;
                         } while (j <= MaxShips);
@@ -1996,7 +1990,9 @@ namespace Battleships
                         {
                             if (num - num3 > 0)
                             {
-                                _marks[num2] = (int) Math.Round(checked(36 * (_score[num2] - num3) / (double) (num - num3)) + 24.0);
+                                _marks[num2] =
+                                    (int) Math.Round(checked(36 * (_score[num2] - num3) / (double) (num - num3)) +
+                                                     24.0);
                             }
                             else
                             {
