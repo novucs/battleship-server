@@ -1,5 +1,4 @@
 using Microsoft.VisualBasic.Devices;
-using System;
 using System.CodeDom.Compiler;
 using System.ComponentModel;
 using System.Diagnostics;

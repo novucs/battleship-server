@@ -1,41 +1,40 @@
-using Microsoft.VisualBasic.ApplicationServices;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.CodeDom.Compiler;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace Battleships.My
 {
 	[GeneratedCode("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0"), EditorBrowsable(EditorBrowsableState.Advanced), CompilerGenerated]
 	internal sealed class MySettings : ApplicationSettingsBase
 	{
-		private static MySettings defaultInstance = (MySettings)SettingsBase.Synchronized(new MySettings());
+		private static readonly MySettings DefaultInstance = (MySettings)Synchronized(new MySettings());
 
-		private static bool addedHandler;
+		private static bool _addedHandler;
 
-		private static object addedHandlerLockObject = RuntimeHelpers.GetObjectValue(new object());
+		private static readonly object AddedHandlerLockObject = RuntimeHelpers.GetObjectValue(new object());
 
 		public static MySettings Default
 		{
 			get
 			{
-				if (!MySettings.addedHandler)
+				if (!_addedHandler)
 				{
-					object obj = MySettings.addedHandlerLockObject;
+					object obj = AddedHandlerLockObject;
 					ObjectFlowControl.CheckForSyncLockOnValueType(obj);
 					lock (obj)
 					{
-						if (!MySettings.addedHandler)
+						if (!_addedHandler)
 						{
-							MyProject.Application.Shutdown += new ShutdownEventHandler(MySettings.AutoSaveSettings);
-							MySettings.addedHandler = true;
+							MyProject.Application.Shutdown += AutoSaveSettings;
+							_addedHandler = true;
 						}
 					}
 				}
-				return MySettings.defaultInstance;
+				return DefaultInstance;
 			}
 		}
 
