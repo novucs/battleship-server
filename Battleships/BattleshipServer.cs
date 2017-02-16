@@ -28,7 +28,7 @@ namespace Battleships
 
         private const int MaxShips = 200;
 
-        private const int FireLimit = 10;
+        private const int FireLimit = 7;
 
         private const bool TutorVersion = false;
 
@@ -862,17 +862,20 @@ namespace Battleships
 
                             do
                             {
-                                if (_shipType[num4] == ShiptypeBattleship)
+                                if (_inuse[num4] && _active[num4])
                                 {
-                                    num5++;
-                                }
-                                if (_shipType[num4] == ShiptypeFrigate)
-                                {
-                                    num6++;
-                                }
-                                if (_shipType[num4] == ShiptypeSubmarine)
-                                {
-                                    num7++;
+                                    if (_shipType[num4] == ShiptypeBattleship)
+                                    {
+                                        num5++;
+                                    }
+                                    if (_shipType[num4] == ShiptypeFrigate)
+                                    {
+                                        num6++;
+                                    }
+                                    if (_shipType[num4] == ShiptypeSubmarine)
+                                    {
+                                        num7++;
+                                    }
                                 }
                                 num4++;
                             } while (num4 <= MaxShips);
@@ -1289,20 +1292,17 @@ namespace Battleships
                                 }
                                 else
                                 {
-                                    if (num4 != 0)
+                                    switch (num4)
                                     {
-                                        if (num4 != 1)
-                                        {
-                                            text7 += text5;
-                                        }
-                                        else
-                                        {
+                                        case 0:
+                                            text += text5;
+                                            break;
+                                        case 1:
                                             text6 += text5;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        text += text5;
+                                            break;
+                                        default:
+                                            text7 += text5;
+                                            break;
                                     }
                                 }
                             }
@@ -1330,20 +1330,17 @@ namespace Battleships
                                     }
                                     else
                                     {
-                                        if (num4 != 0)
+                                        switch (num4)
                                         {
-                                            if (num4 != 1)
-                                            {
-                                                text7 += text5;
-                                            }
-                                            else
-                                            {
+                                            case 0:
+                                                text += text5;
+                                                break;
+                                            case 1:
                                                 text6 += text5;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            text += text5;
+                                                break;
+                                            default:
+                                                text7 += text5;
+                                                break;
                                         }
                                     }
                                 }
@@ -1772,14 +1769,7 @@ namespace Battleships
                     {
                         double num12 = _shipX[i] - _shipX[j];
                         double num13 = _shipY[i] - _shipY[j];
-                        var exprD56 = num12;
-                        double d;
-                        unchecked
-                        {
-                            var argD5C0 = exprD56 * exprD56;
-                            var exprD5A = num13;
-                            d = argD5C0 + exprD5A * exprD5A;
-                        }
+                        double d = unchecked(num12 * num12 + num13 * num13);
                         _distance[i, j] = (int) Math.Round(Math.Sqrt(d));
                         j++;
                     } while (j <= MaxShips);
