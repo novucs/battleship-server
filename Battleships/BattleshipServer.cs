@@ -28,7 +28,7 @@ namespace Battleships
 
         private const int MaxShips = 200;
 
-        private const int FireLimit = 7;
+        private const int FireLimit = 4;
 
         private const bool TutorVersion = false;
 
