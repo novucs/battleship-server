@@ -1818,8 +1818,17 @@ namespace Battleships
                     if (!(_inuse[i] & _active[i]))
                         continue;
 
-                    var text3 = string.Concat(_shipX[i].ToString(), ",", _shipY[i].ToString(), ",",
-                        _health[i].ToString(), ",", _flag[i].ToString());
+                    var text3 = string.Concat(
+                        _shipX[i].ToString(),
+                        ",",
+                        _shipY[i].ToString(),
+                        ",",
+                        _health[i].ToString(),
+                        ",",
+                        _flag[i].ToString(),
+                        ",",
+                        _shipType[i].ToString()
+                    );
                     _numberOfShips = 0;
                     var j = 0;
 
